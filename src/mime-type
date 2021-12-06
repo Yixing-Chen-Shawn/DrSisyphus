@@ -1,0 +1,14 @@
+html=text/html
+jpeg=image/jpeg
+javascript=text/javascript
+png=image/png
+pdf=application/pdf
+ppt=application/vnd.ms-powerpoint
+plain=text/plain
+zip=application/zip
+word=application/msword
+css=text/css
+java=java/*
+xml=text/xml
+php=text/plain
+

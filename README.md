@@ -27,5 +27,9 @@ Responsibility:
 ___
 ### Project structure: 'todo
 ___
-### Features implemented: 'todo
+### Features implemented:
++ Support for GET and POST methods
++ Basic access authentication
++ Handlers for static file requests
++ Non-blocking IO 
 

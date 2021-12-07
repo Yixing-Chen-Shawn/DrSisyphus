@@ -1,12 +1,30 @@
 <!DOCTYPE html>
 <html>
+
 <body>
-<h1>Shawn's server homepage</h1>
-<p> the http-serverv0.1 is running rn </p>
-<form>
-    <label for = "choose"> would you prefer to use this server?</label>
-    <input id="choose" name="i_like" required>
-    <button>Submit</button>
-</form>
+    <h1>Drsisyphusv0.1 homepage</h1>
+    <h2>Implemented by: Yixing Chen</h2>
+    <p> Drsisyphusv0.1 is running right now</p>
+    <form action="http://localhost:8080/greetingFromDrsisyphus.html" method="post">
+        <div>
+            <label for="choose"> Would you prefer to use Drsisyphus?</label>
+            <input id="choose" name="i_like">
+        </div>
+        <br>
+        <div>
+            <label for="say">What greeting do you want to say?</label>
+            <input name="say" id="say">
+        </div>
+        <br>
+        <div>
+            <label for="to">Who do you want to say it to?</label>
+            <input name="to" id="to">
+        </div>
+        <br>
+        <div>
+            <button>Send my greetings</button>
+        </div>
+    </form>
 </body>
+
 </html>

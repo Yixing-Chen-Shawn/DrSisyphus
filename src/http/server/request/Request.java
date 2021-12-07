@@ -15,6 +15,8 @@ public interface Request {
     String getCacheControl();
 
     String getConnection();
+    
+    String getContentType();
 
     String getReferer();
 

@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.lang.ProcessHandle.Info;
 import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.Properties;
@@ -14,6 +15,7 @@ import java.util.logging.Logger;
 
 import http.server.auth.BasicAuthenticate;
 import http.server.bean.Const;
+import http.server.bean.Method;
 import http.server.bean.StatusCode;
 import http.server.request.Request;
 import http.server.response.Response;
@@ -25,6 +27,7 @@ public class DefaultServlet extends StaticServlet {
 
     @Override
     public void service(Request request, Response response) {
+        response.setServer(Const.SERVER_NAME);
         if (!BasicAuthenticate.success(request, response)) {
             response.setStatusCode(StatusCode.Unauthorized);
             response.setDate(Util.getGMTString(new Date()));
@@ -32,6 +35,52 @@ public class DefaultServlet extends StaticServlet {
             return;
         }
 
+        if (Method.GET.getName().equals(request.getMethod())) {
+            LOG.log(Level.INFO, "doGET...");
+            doGet(request, response);
+        } else if (Method.POST.getName().equals(request.getMethod())) {
+            LOG.log(Level.INFO, "doPOST...");
+            doPost(request, response);
+        } else {
+            LOG.log(Level.INFO, "doNothing");
+            doNothing(request, response);
+        }
+    }
+
+    private void doNothing(Request request, Response response) {
+        response.setStatusCode(StatusCode.Not_Found);
+        response.setDate(Util.getGMTString(new Date()));
+    }
+
+    private void doPost(Request request, Response response) {
+        ResponseWrapper responseWrapper = ((ResponseWrapper) response);
+        StringBuffer stringBuffer = new StringBuffer();
+        int index = 0;
+
+        for (String name : request.getParameters().keySet()) {
+            stringBuffer.append("parameter ");
+            stringBuffer.append(index++);
+            stringBuffer.append(": ");
+            stringBuffer.append(name);
+            stringBuffer.append("=");
+            stringBuffer.append(request.getParameter(name));
+            stringBuffer.append("<br>");
+        }
+
+        byte[] bytes = stringBuffer.toString().getBytes();
+        int len = bytes.length;
+
+        ByteBuffer buffer = ByteBuffer.allocate(len);
+        buffer.put(bytes);
+        buffer.flip();
+        responseWrapper.setResponseContent(buffer);
+        response.setContentLength(len);
+        
+        response.setStatusCode(StatusCode.OK);
+        response.setDate(Util.getGMTString(new Date()));
+    }
+
+    private void doGet(Request request, Response response) {
         String page = getPage(request);
         File file = new File(page);
         FileReader fileReader = null;
@@ -45,14 +94,14 @@ public class DefaultServlet extends StaticServlet {
             readFile(response, page);
 
             response.setDate(Util.getGMTString(new Date(file.lastModified())));
-            try{
+            try {
                 fileReader = new FileReader(Const.MIME_TYPE);
                 bufferedReader = new BufferedReader(fileReader);
                 properties.load(bufferedReader);
                 fileReader.close();
                 bufferedReader.close();
                 extension = file.getName().split("\\.")[1];
-                if(properties.getProperty(extension) == null){
+                if (properties.getProperty(extension) == null) {
                     LOG.log(Level.WARNING, "MIME type not found: ", extension);
                     return;
                 }

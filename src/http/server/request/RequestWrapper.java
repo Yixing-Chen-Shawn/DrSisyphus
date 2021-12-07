@@ -11,6 +11,7 @@ public class RequestWrapper implements Request {
     private String authorization = null;
     private String cacheControl = null;
     private String connection = null;
+    private String contentType = null;
     private String referer = null;
     private String host = null;
     private String method = null;
@@ -80,6 +81,15 @@ public class RequestWrapper implements Request {
 
     public void setConnection(String connection) {
         this.connection = connection;
+    }
+
+    @Override
+    public String getContentType(){
+        return contentType;
+    }
+
+    public void setContentType(String contentType){
+        this.contentType = contentType;
     }
 
     @Override
@@ -183,6 +193,7 @@ public class RequestWrapper implements Request {
         buffer.append((null == getAuthorization()) ? "" : (" authorization=" + getAuthorization()));
         buffer.append((null == getCacheControl()) ? "" : (" cacheControl=" + getCacheControl()));
         buffer.append((null == getConnection()) ? "" : (" connection=" + getConnection()));
+        buffer.append((null == getContentType()) ? "" : (" contentType=" + getContentType()));
         buffer.append((null == getReferer()) ? "" : (" referer=" + getReferer()));
         buffer.append((null == getHost()) ? "" : (" host=" + getHost()));
         buffer.append((null == getMethod()) ? "" : (" method=" + getMethod()));

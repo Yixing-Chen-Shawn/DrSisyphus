@@ -9,27 +9,29 @@ git clone https://github.com/Yixing-Chen-Shawn/http-server.git
 ```
 After cloning the project into your local directory, open your Visual Studio Code and import the project.
 
+Open up the terminal in your local environment(do not use builtin terminal in the VScode), go to src folder of the project, type in
+
+```text
+make run
+```
+
+Then the drsisyphus will be running, and for server authentication, the username and password are both: admin.
+
+I put index.html in the wwwroot folder, feel free to change the content. 
+
 ---
 ### Disclaimer
-This HTTP server is currently set to private due to ongoing development. This project will be extended into a large, full-fledged http server benchmarked against Apache Tomcat. Therefore, I would not like to reveal any sourcecode for now. 
-___
-### Developer list with responsibility:
-Team lead: Yixing Chen
+This HTTP server is currently under development. It only supports limited features.
 
-Team members: Cheng Yu Sung, Akshay Ram, Hang Zhao, Fiona Tubiana
-
-Responsibility:
-+ Yixing Chen: will be responsible for deriving the software architecture and designing the framework to structure the whole project. Apart from those, He is also responsible for implementing two request methods GET & POST methods from basic requirements, basic access authentication, handlers for static and dynamic file requests, NIO for replacing BIO in multithreading, and etc. for additional requirements. 
-+ Cheng Yu Sung: will be in charge with implementing logging. 
-+ Akshay Ram: will be implementing one of request methods HEAD.
-+ Hang Zhao: will be implementing SSL. 
-+ Fiona Tubiana: will be implementing one of request methods DELETE.
 ___
 ### Project structure: 'todo
 ___
 ### Features implemented:
-+ Support for GET and POST methods
-+ Basic access authentication
-+ Handlers for static file requests
-+ Non-blocking IO 
++ Software Architecture for server extensibility && long term development
++ Support for GET, POST && HEAD.
++ Basic access authentication.
++ Handlers for static file requests && dynamic file requests (static and dynamic servlets implemented).
++ Non-blocking IO approach for (scalable) client-server communication (no thread and stream).
+
+### Under Test
 

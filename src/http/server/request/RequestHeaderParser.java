@@ -20,6 +20,7 @@ public class RequestHeaderParser {
     public void parse() {
         ByteBuffer buffer = request.getRequestBuffer();
         String data = new String(buffer.array());
+        //parse the headers of Http request
         parseHeader(data);
     }
 
@@ -33,28 +34,34 @@ public class RequestHeaderParser {
             return;
         }
 
+        //parse reqeust line
         parseRequestLine(lines[0]);
 
+        //use for loop to parse all the header fields
         for (int i = 1; i < lines.length; i++) {
             parseHeaderField(lines[i]);
         }
 
+        //parse form parameters for post method now 
         parseFormParameter(lines[lines.length - 1]);
 
         LOG.log(Level.INFO, "Request parse header ok");
     }
 
     private void parseFormParameter(String line) {
+        //must be a post request
         if (!Method.POST.getName().equals(request.getMethod())) {
             return;
         }
 
+        //must be application/x-www-form-urlencoded content type 
         if (!"application/x-www-form-urlencoded".equals(request.getContentType())) {
             return;
         }
 
         LOG.log(Level.INFO, "Request parse form-urlencoded line. line=" + line);
 
+        //set parameters 
         setParameter(line);
     }
 
@@ -84,6 +91,7 @@ public class RequestHeaderParser {
         }
     }
 
+    //used to parse and call method to set request line
     private void parseRequestLine(String line) {
         String[] fields = line.split(Const.SPACE_SEPARATOR);
 
@@ -103,6 +111,7 @@ public class RequestHeaderParser {
         request.setProtocol(fields[2]);
     }
 
+    //used parse header field and call method to set header fields
     private void parseHeaderField(String line) {
         if ("".equals(line)) {
             return;

@@ -18,10 +18,13 @@ public class WriteHandler extends BaseHandler {
 
     @Override
     public void handle() {
+        //return the channel for which the selection key was created, and cast to SocketChannel
         SocketChannel channel = (SocketChannel) selectionKey.channel();
+        //get corresponding lifecycle object with selectionkey
         LifeCycle lifeCycle = ChannelMap.get(selectionKey);
 
         try {
+            //check connection status in each lifecycle
             switch (lifeCycle.getConnectionStatus()) {
                 case Close_Connect:
                     closeConnect(channel);

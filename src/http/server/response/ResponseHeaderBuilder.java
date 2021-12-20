@@ -35,6 +35,7 @@ public class ResponseHeaderBuilder {
         field.append(Const.LINE_SEPARATOR);
     }
 
+    //appending all the response header field to a string buffer 
     private void buildReponseFields() {
         if (null != response.getAcceptRanges()) {
             field.append(Field.Accept_Ranges.getName());

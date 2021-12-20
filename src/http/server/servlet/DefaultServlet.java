@@ -6,14 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.lang.ProcessHandle.Info;
 import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import http.server.auth.BasicAuthenticate;
+import http.server.auth.BasicAuthenticator;
 import http.server.bean.Const;
 import http.server.bean.Method;
 import http.server.bean.StatusCode;
@@ -25,10 +24,11 @@ import http.server.util.Util;
 public class DefaultServlet extends StaticServlet {
     private static final Logger LOG = Logger.getLogger(DefaultServlet.class.getName());
 
+    //key part of default servlet for handling statis file request
     @Override
     public void service(Request request, Response response) {
         response.setServer(Const.SERVER_NAME);
-        if (!BasicAuthenticate.success(request, response)) {
+        if (!BasicAuthenticator.success(request, response)) {
             response.setStatusCode(StatusCode.Unauthorized);
             response.setDate(Util.getGMTString(new Date()));
             response.setWwwAuthenticate("Basic realm=\"Auth\"");
@@ -47,11 +47,13 @@ public class DefaultServlet extends StaticServlet {
         }
     }
 
+    //for handling requests not supported
     private void doNothing(Request request, Response response) {
         response.setStatusCode(StatusCode.Not_Found);
         response.setDate(Util.getGMTString(new Date()));
     }
 
+    //for handling post request
     private void doPost(Request request, Response response) {
         ResponseWrapper responseWrapper = ((ResponseWrapper) response);
         StringBuffer stringBuffer = new StringBuffer();
@@ -80,6 +82,7 @@ public class DefaultServlet extends StaticServlet {
         response.setDate(Util.getGMTString(new Date()));
     }
 
+    //for handling get request
     private void doGet(Request request, Response response) {
         String page = getPage(request);
         File file = new File(page);
@@ -95,6 +98,7 @@ public class DefaultServlet extends StaticServlet {
 
             response.setDate(Util.getGMTString(new Date(file.lastModified())));
             try {
+                //check all supported mime type in mime-type file under src folder
                 fileReader = new FileReader(Const.MIME_TYPE);
                 bufferedReader = new BufferedReader(fileReader);
                 properties.load(bufferedReader);

@@ -20,10 +20,14 @@ public class AcceptHandler extends BaseHandler {
         ServerSocketChannel serverChannel = (ServerSocketChannel) selectionKey.channel();
 
         try {
+            //accept the connections made to socket of the server channel
             SocketChannel channel = serverChannel.accept();
+            //config the channel as nonblocking 
             channel.configureBlocking(false);
+            //register the channel with given selector, and give out selection key with read permission
             selectionKey = channel.register(selector, SelectionKey.OP_READ);
 
+            //put key and new lifecycle into channelmap
             ChannelMap.put(selectionKey, new LifeCycle());
             LOG.log(Level.INFO, "Server accept new connection: " + channel.getRemoteAddress());
         } catch (IOException e) {

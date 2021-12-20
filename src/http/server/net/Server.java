@@ -24,7 +24,9 @@ public class Server extends Thread {
             InetSocketAddress address = new InetSocketAddress(Const.HTTP_DEFAULT_PORT);
             serverSocket.bind(address);
             serverSocketChannel.configureBlocking(false);
+            //opens a selector 
             selector = Selector.open();
+            //register the serverSocketChannel to a selector for accepting connections
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
             LOG.log(Level.INFO, "Server listening to " + address.getAddress() + ":" + address.getPort());
@@ -33,6 +35,7 @@ public class Server extends Thread {
         }
     }
 
+    //start the server 
     public void startup() {
         init();
         start();
@@ -51,13 +54,18 @@ public class Server extends Thread {
                 LOG.log(Level.INFO, "Server run exception:", e);
             }
 
+            //create iterator for the key set 
             Iterator<SelectionKey> selectionKeys = selector.selectedKeys().iterator();
             Handler handler = null;
 
+            //check if there is a next key exists 
             while (selectionKeys.hasNext()) {
+                //return the selection key and then remove it.
                 SelectionKey selectionKey = selectionKeys.next();
                 selectionKeys.remove();
 
+                //check if each channel's status, if its ready to accept or read or write.
+                //and go to different handler for processing
                 if (selectionKey.isAcceptable()) {
                     handler = new AcceptHandler(selector, selectionKey);
                 } else if (selectionKey.isReadable()) {
